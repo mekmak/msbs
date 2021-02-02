@@ -2,12 +2,17 @@ package solver
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 )
 
 // LoadWords reads words line by line from a file and returns all words that have the
 // required letter, only contain valid letters, and are at least of a certain length
 func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWordSize int) ([]string, error) {
+	if minWordSize < 1 {
+		return nil, fmt.Errorf("Min word size must be at least 1")
+	}
+
 	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
