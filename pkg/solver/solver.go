@@ -27,10 +27,12 @@ func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWor
 
 		reqFound := false
 		allValid := true
+		reqLength := false
 
-		len := 0
-		for _, l := range word {
-			len++
+		for i, l := range word {
+			if i == minWordSize-1 {
+				reqLength = true
+			}
 
 			if l == requiredLetter {
 				reqFound = true
@@ -43,7 +45,7 @@ func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWor
 			}
 		}
 
-		if len >= minWordSize && reqFound && allValid {
+		if reqLength && reqFound && allValid {
 			words = append(words, word)
 		}
 	}
