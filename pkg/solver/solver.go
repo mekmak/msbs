@@ -19,9 +19,9 @@ func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWor
 	}
 	defer file.Close()
 
-	letters := make(map[rune]struct{}, len(validLetters))
+	letters := make(map[rune]bool, len(validLetters))
 	for _, l := range validLetters {
-		letters[l] = struct{}{}
+		letters[l] = false
 	}
 
 	words := []string{}
@@ -33,6 +33,9 @@ func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWor
 		reqFound := false
 		allValid := true
 		reqLength := false
+		for l, _ := range letters {
+			letters[l] = false
+		}
 
 		for i, l := range word {
 			if i == minWordSize-1 {
@@ -41,13 +44,23 @@ func LoadWords(filePath string, requiredLetter rune, validLetters []rune, minWor
 
 			if l == requiredLetter {
 				reqFound = true
-				continue
 			}
 
 			if _, ok := letters[l]; !ok {
 				allValid = false
 				break
 			}
+
+			letters[l] = true
+		}
+
+		allFound := true
+		for _, f := range letters {
+			allFound = allFound && f
+		}
+
+		if allFound {
+			word = fmt.Sprintf("%s (A)", word)
 		}
 
 		if reqLength && reqFound && allValid {
